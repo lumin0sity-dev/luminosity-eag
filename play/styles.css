@@ -1,0 +1,62 @@
+body, html {
+  margin: 0;
+  height: 100%;
+  background: #88c0ff;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  overflow: hidden;
+}
+
+#ui {
+  position: absolute;
+  left: 0; right: 0; top: 0; pointer-events: none;
+}
+
+#topbar {
+  pointer-events: auto;
+  background: rgba(10,10,10,0.4);
+  color: #fff;
+  padding: 8px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+#inventory {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: auto;
+  display: flex;
+  gap: 8px;
+  padding: 6px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 6px;
+}
+
+.inv-slot {
+  width: 48px;
+  height: 48px;
+  border: 2px solid rgba(255,255,255,0.15);
+  display: grid;
+  place-items: center;
+  color: #fff;
+  cursor: pointer;
+  user-select: none;
+}
+
+.inv-slot.selected {
+  border-color: #ffd166;
+  box-shadow: 0 0 6px #ffd16666;
+}
+
+#help {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  pointer-events: auto;
+  color: #fff;
+  background: rgba(0,0,0,0.25);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
