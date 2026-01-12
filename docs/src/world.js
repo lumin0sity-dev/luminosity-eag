@@ -3,12 +3,12 @@ import * as THREE from 'three';
 
 // TextureLoader: load block textures
 const textureLoader = new THREE.TextureLoader();
-const grassTexture = textureLoader.load('docs/textures/grass.png');
-const dirtTexture = textureLoader.load('docs/textures/dirt.png');
-const stoneTexture = textureLoader.load('docs/textures/stone.png');
+const grassTexture = textureLoader.load('textures/grass.png');
+const dirtTexture = textureLoader.load('textures/dirt.png');
+const stoneTexture = textureLoader.load('textures/stone.png');
 
-grasstexture.magFilter = THREE.NearestFilter;
-grasstexture.minFilter = THREE.NearestMipMapNearestFilter;
+grassTexture.magFilter = THREE.NearestFilter;
+grassTexture.minFilter = THREE.NearestMipMapNearestFilter;
 dirtTexture.magFilter = THREE.NearestFilter;
 dirtTexture.minFilter = THREE.NearestMipMapNearestFilter;
 stoneTexture.magFilter = THREE.NearestFilter;
