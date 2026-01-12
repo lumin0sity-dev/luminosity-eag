@@ -369,6 +369,12 @@ GitHub (for making this so easy to share and build!)</div>
       }
     }
 
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
     function refreshWorldList() {
       const worlds = JSON.parse(localStorage.getItem('eagler_worlds'));
       const listDiv = document.getElementById('world-list');
@@ -381,15 +387,29 @@ GitHub (for making this so easy to share and build!)</div>
       listDiv.innerHTML = worlds.map((world, index) => `
         <div class="world-item">
           <div class="world-info">
-            <div class="world-name">${world.name}</div>
+            <div class="world-name">${escapeHtml(world.name)}</div>
             <div class="server-address">${world.type === 'epk' ? 'EPK World' : 'Created World'}</div>
           </div>
           <div class="world-actions">
-            <button class="btn btn-small btn-primary" onclick="launchGame('singleplayer', '${world.name}')">Play</button>
-            <button class="btn btn-small btn-danger" onclick="deleteWorld(${index})">Delete</button>
+            <button class="btn btn-small btn-primary" data-action="play" data-index="${index}">Play</button>
+            <button class="btn btn-small btn-danger" data-action="delete" data-index="${index}">Delete</button>
           </div>
         </div>
       `).join('');
+      
+      // Add event listeners
+      listDiv.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = e.target.dataset.action;
+          const index = parseInt(e.target.dataset.index);
+          if (action === 'play') {
+            const worlds = JSON.parse(localStorage.getItem('eagler_worlds'));
+            launchGame('singleplayer', worlds[index].name);
+          } else if (action === 'delete') {
+            deleteWorld(index);
+          }
+        });
+      });
     }
 
     function deleteWorld(index) {
@@ -412,8 +432,20 @@ GitHub (for making this so easy to share and build!)</div>
         return;
       }
       
+      // Validate WebSocket URL format
       if (!address.startsWith('wss://') && !address.startsWith('ws://')) {
         alert('Server address must start with wss:// or ws://');
+        return;
+      }
+      
+      // Basic URL validation
+      try {
+        const url = new URL(address);
+        if (url.protocol !== 'wss:' && url.protocol !== 'ws:') {
+          throw new Error('Invalid protocol');
+        }
+      } catch (e) {
+        alert('Invalid server address format. Please use a valid WebSocket URL (e.g., wss://example.com:8080)');
         return;
       }
       
@@ -438,16 +470,32 @@ GitHub (for making this so easy to share and build!)</div>
       listDiv.innerHTML = servers.map((server, index) => `
         <div class="server-item">
           <div class="server-info">
-            <div class="server-name">${server.name}</div>
-            <div class="server-address">${server.address}</div>
+            <div class="server-name">${escapeHtml(server.name)}</div>
+            <div class="server-address">${escapeHtml(server.address)}</div>
           </div>
           <div class="server-actions">
-            <button class="btn btn-small btn-primary" onclick="launchGame('multiplayer', '${server.address}')">Join</button>
-            <button class="btn btn-small" onclick="editServer(${index})">Edit</button>
-            <button class="btn btn-small btn-danger" onclick="deleteServer(${index})">Delete</button>
+            <button class="btn btn-small btn-primary" data-action="join" data-index="${index}">Join</button>
+            <button class="btn btn-small" data-action="edit" data-index="${index}">Edit</button>
+            <button class="btn btn-small btn-danger" data-action="delete" data-index="${index}">Delete</button>
           </div>
         </div>
       `).join('');
+      
+      // Add event listeners
+      listDiv.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const action = e.target.dataset.action;
+          const index = parseInt(e.target.dataset.index);
+          if (action === 'join') {
+            const servers = JSON.parse(localStorage.getItem('eagler_servers'));
+            launchGame('multiplayer', servers[index].address);
+          } else if (action === 'edit') {
+            editServer(index);
+          } else if (action === 'delete') {
+            deleteServer(index);
+          }
+        });
+      });
     }
 
     function editServer(index) {
@@ -490,20 +538,22 @@ GitHub (for making this so easy to share and build!)</div>
     function uploadSkin(input) {
       const file = input.files[0];
       if (file) {
-        // In a real implementation, we'd read and store the file
-        // For now, just store the filename
+        // TODO: In a real implementation, we'd read and store the file as base64
+        // or upload it to a server. For now, just store the filename.
         localStorage.setItem('eagler_skin', file.name);
         refreshProfile();
-        alert('Skin uploaded! (Note: Preview not implemented in demo)');
+        alert('Skin uploaded! (Note: Visual preview not yet implemented)');
       }
     }
 
     function uploadCape(input) {
       const file = input.files[0];
       if (file) {
+        // TODO: In a real implementation, we'd read and store the file as base64
+        // or upload it to a server. For now, just store the filename.
         localStorage.setItem('eagler_cape', file.name);
         refreshProfile();
-        alert('Cape uploaded! (Note: Preview not implemented in demo)');
+        alert('Cape uploaded! (Note: Visual preview not yet implemented)');
       }
     }
 
