@@ -40,6 +40,9 @@ class Game {
       const f = e.target.files[0];
       if (f) this.saveManager.loadFile(f);
     });
+    document.getElementById('launcherBtn').addEventListener('click', ()=> {
+      window.location.href = 'launcher.html';
+    });
 
     // friendly orbit control toggle for dev (press O)
     this.useOrbit = false;

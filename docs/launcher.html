@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eagler Launcher</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Minecraft', 'Courier New', monospace;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #fff;
+    }
+
+    #launcher {
+      background: rgba(0, 0, 0, 0.85);
+      border: 3px solid #444;
+      border-radius: 8px;
+      padding: 30px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 32px;
+      text-shadow: 3px 3px 0 #000;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      font-size: 24px;
+      text-shadow: 2px 2px 0 #000;
+    }
+
+    .screen {
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .btn {
+      background: linear-gradient(180deg, #5a5a5a 0%, #3a3a3a 100%);
+      border: 2px solid #000;
+      color: #fff;
+      padding: 12px 24px;
+      margin: 8px 0;
+      width: 100%;
+      cursor: pointer;
+      font-size: 16px;
+      font-family: inherit;
+      text-shadow: 1px 1px 0 #000;
+      transition: all 0.1s;
+      border-radius: 4px;
+    }
+
+    .btn:hover {
+      background: linear-gradient(180deg, #7a7a7a 0%, #5a5a5a 100%);
+      border-color: #fff;
+    }
+
+    .btn:active {
+      transform: translateY(2px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, #4a9eff 0%, #2a7edf 100%);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(180deg, #6abeFF 0%, #4a9eff 100%);
+    }
+
+    .btn-danger {
+      background: linear-gradient(180deg, #ff4a4a 0%, #df2a2a 100%);
+    }
+
+    .btn-danger:hover {
+      background: linear-gradient(180deg, #ff6a6a 0%, #ff4a4a 100%);
+    }
+
+    .btn-small {
+      padding: 6px 12px;
+      font-size: 14px;
+      width: auto;
+      display: inline-block;
+      margin: 4px;
+    }
+
+    input[type="text"],
+    input[type="file"] {
+      background: #2a2a2a;
+      border: 2px solid #444;
+      color: #fff;
+      padding: 10px;
+      margin: 8px 0;
+      width: 100%;
+      font-size: 14px;
+      font-family: inherit;
+      border-radius: 4px;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      border-color: #4a9eff;
+    }
+
+    label {
+      display: block;
+      margin-top: 12px;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .server-item,
+    .world-item {
+      background: #2a2a2a;
+      border: 2px solid #444;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .server-info,
+    .world-info {
+      flex: 1;
+    }
+
+    .server-name,
+    .world-name {
+      font-weight: bold;
+      font-size: 16px;
+    }
+
+    .server-address {
+      font-size: 12px;
+      color: #aaa;
+      margin-top: 4px;
+    }
+
+    .server-actions,
+    .world-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .credits-text {
+      background: #2a2a2a;
+      border: 2px solid #444;
+      padding: 20px;
+      margin: 15px 0;
+      border-radius: 4px;
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    .profile-preview {
+      background: #2a2a2a;
+      border: 2px solid #444;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 4px;
+    }
+
+    .preview-item {
+      margin: 10px 0;
+    }
+
+    .preview-label {
+      font-size: 12px;
+      color: #aaa;
+      margin-bottom: 4px;
+    }
+
+    .preview-value {
+      font-size: 16px;
+      color: #fff;
+    }
+
+    .file-name {
+      font-size: 12px;
+      color: #4a9eff;
+      margin-top: 4px;
+    }
+
+    .empty-message {
+      text-align: center;
+      color: #888;
+      padding: 20px;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div id="launcher">
+    <h1>🎮 Eaglercraft Launcher</h1>
+
+    <!-- Main Menu -->
+    <div id="main-menu" class="screen active">
+      <button class="btn btn-primary" onclick="showScreen('singleplayer')">Singleplayer</button>
+      <button class="btn btn-primary" onclick="showScreen('multiplayer')">Multiplayer</button>
+      <button class="btn" onclick="showScreen('credits')">Credits</button>
+      <button class="btn" onclick="showScreen('edit-profile')">Edit Profile</button>
+    </div>
+
+    <!-- Singleplayer Screen -->
+    <div id="singleplayer" class="screen">
+      <h2>Singleplayer</h2>
+      
+      <div id="world-list"></div>
+      
+      <label for="world-name">Create New World:</label>
+      <input type="text" id="world-name" placeholder="Enter world name">
+      <button class="btn btn-primary" onclick="createWorld()">Create</button>
+      
+      <label for="epk-upload">Upload World (.EPK):</label>
+      <input type="file" id="epk-upload" accept=".epk" onchange="uploadEPK(this)">
+      <div id="epk-file-name" class="file-name"></div>
+      
+      <button class="btn" onclick="showScreen('main-menu')">Back</button>
+    </div>
+
+    <!-- Multiplayer Screen -->
+    <div id="multiplayer" class="screen">
+      <h2>Multiplayer</h2>
+      
+      <div id="server-list"></div>
+      
+      <h3 style="margin-top: 20px; font-size: 18px;">Add Server</h3>
+      <label for="server-name">Server Name:</label>
+      <input type="text" id="server-name" placeholder="My Server">
+      
+      <label for="server-address">Server Address:</label>
+      <input type="text" id="server-address" placeholder="wss://example.com:8080">
+      
+      <button class="btn btn-primary" onclick="addServer()">Add</button>
+      <button class="btn" onclick="showScreen('main-menu')">Back</button>
+    </div>
+
+    <!-- Credits Screen -->
+    <div id="credits" class="screen">
+      <h2>Credits</h2>
+      <div class="credits-text">Credits:
+Mojang (original Minecraft inspiration, property owners – please don't sue!)
+luminosity (project creator)
+GitHub (for making this so easy to share and build!)</div>
+      <button class="btn" onclick="showScreen('main-menu')">Back</button>
+    </div>
+
+    <!-- Edit Profile Screen -->
+    <div id="edit-profile" class="screen">
+      <h2>Edit Profile</h2>
+      
+      <div class="profile-preview">
+        <div class="preview-item">
+          <div class="preview-label">Current Player Name:</div>
+          <div class="preview-value" id="current-player-name">Steve</div>
+        </div>
+        <div class="preview-item">
+          <div class="preview-label">Current Skin:</div>
+          <div class="preview-value" id="current-skin">Default (steve.png)</div>
+        </div>
+        <div class="preview-item">
+          <div class="preview-label">Current Cape:</div>
+          <div class="preview-value" id="current-cape">None</div>
+        </div>
+      </div>
+      
+      <label for="player-name">Player Name:</label>
+      <input type="text" id="player-name" placeholder="Enter your name">
+      <button class="btn btn-primary" onclick="savePlayerName()">Save Name</button>
+      
+      <label for="skin-upload">Upload Skin (skin.png):</label>
+      <input type="file" id="skin-upload" accept=".png" onchange="uploadSkin(this)">
+      
+      <label for="cape-upload">Upload Cape (cape.png):</label>
+      <input type="file" id="cape-upload" accept=".png" onchange="uploadCape(this)">
+      
+      <button class="btn" onclick="showScreen('main-menu')">Back</button>
+    </div>
+  </div>
+
+  <script>
+    // Initialize localStorage data
+    function initStorage() {
+      if (!localStorage.getItem('eagler_servers')) {
+        localStorage.setItem('eagler_servers', JSON.stringify([]));
+      }
+      if (!localStorage.getItem('eagler_worlds')) {
+        localStorage.setItem('eagler_worlds', JSON.stringify([]));
+      }
+      if (!localStorage.getItem('eagler_player_name')) {
+        localStorage.setItem('eagler_player_name', 'Steve');
+      }
+    }
+
+    // Screen navigation
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(screenId).classList.add('active');
+      
+      // Refresh data when showing certain screens
+      if (screenId === 'singleplayer') {
+        refreshWorldList();
+      } else if (screenId === 'multiplayer') {
+        refreshServerList();
+      } else if (screenId === 'edit-profile') {
+        refreshProfile();
+      }
+    }
+
+    // Singleplayer functions
+    function createWorld() {
+      const nameInput = document.getElementById('world-name');
+      const name = nameInput.value.trim();
+      
+      if (!name) {
+        alert('Please enter a world name');
+        return;
+      }
+      
+      const worlds = JSON.parse(localStorage.getItem('eagler_worlds'));
+      worlds.push({
+        name: name,
+        created: new Date().toISOString(),
+        type: 'new'
+      });
+      localStorage.setItem('eagler_worlds', JSON.stringify(worlds));
+      
+      nameInput.value = '';
+      refreshWorldList();
+      
+      // Launch game with this world
+      launchGame('singleplayer', name);
+    }
+
+    function uploadEPK(input) {
+      const file = input.files[0];
+      if (file) {
+        document.getElementById('epk-file-name').textContent = `Selected: ${file.name}`;
+        
+        // Store world info
+        const worlds = JSON.parse(localStorage.getItem('eagler_worlds'));
+        worlds.push({
+          name: file.name.replace('.epk', ''),
+          created: new Date().toISOString(),
+          type: 'epk',
+          fileName: file.name
+        });
+        localStorage.setItem('eagler_worlds', JSON.stringify(worlds));
+        
+        refreshWorldList();
+      }
+    }
+
+    function refreshWorldList() {
+      const worlds = JSON.parse(localStorage.getItem('eagler_worlds'));
+      const listDiv = document.getElementById('world-list');
+      
+      if (worlds.length === 0) {
+        listDiv.innerHTML = '<div class="empty-message">No worlds created yet</div>';
+        return;
+      }
+      
+      listDiv.innerHTML = worlds.map((world, index) => `
+        <div class="world-item">
+          <div class="world-info">
+            <div class="world-name">${world.name}</div>
+            <div class="server-address">${world.type === 'epk' ? 'EPK World' : 'Created World'}</div>
+          </div>
+          <div class="world-actions">
+            <button class="btn btn-small btn-primary" onclick="launchGame('singleplayer', '${world.name}')">Play</button>
+            <button class="btn btn-small btn-danger" onclick="deleteWorld(${index})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function deleteWorld(index) {
+      const worlds = JSON.parse(localStorage.getItem('eagler_worlds'));
+      worlds.splice(index, 1);
+      localStorage.setItem('eagler_worlds', JSON.stringify(worlds));
+      refreshWorldList();
+    }
+
+    // Multiplayer functions
+    function addServer() {
+      const nameInput = document.getElementById('server-name');
+      const addressInput = document.getElementById('server-address');
+      
+      const name = nameInput.value.trim();
+      const address = addressInput.value.trim();
+      
+      if (!name || !address) {
+        alert('Please enter both server name and address');
+        return;
+      }
+      
+      if (!address.startsWith('wss://') && !address.startsWith('ws://')) {
+        alert('Server address must start with wss:// or ws://');
+        return;
+      }
+      
+      const servers = JSON.parse(localStorage.getItem('eagler_servers'));
+      servers.push({ name, address });
+      localStorage.setItem('eagler_servers', JSON.stringify(servers));
+      
+      nameInput.value = '';
+      addressInput.value = '';
+      refreshServerList();
+    }
+
+    function refreshServerList() {
+      const servers = JSON.parse(localStorage.getItem('eagler_servers'));
+      const listDiv = document.getElementById('server-list');
+      
+      if (servers.length === 0) {
+        listDiv.innerHTML = '<div class="empty-message">No servers added yet</div>';
+        return;
+      }
+      
+      listDiv.innerHTML = servers.map((server, index) => `
+        <div class="server-item">
+          <div class="server-info">
+            <div class="server-name">${server.name}</div>
+            <div class="server-address">${server.address}</div>
+          </div>
+          <div class="server-actions">
+            <button class="btn btn-small btn-primary" onclick="launchGame('multiplayer', '${server.address}')">Join</button>
+            <button class="btn btn-small" onclick="editServer(${index})">Edit</button>
+            <button class="btn btn-small btn-danger" onclick="deleteServer(${index})">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function editServer(index) {
+      const servers = JSON.parse(localStorage.getItem('eagler_servers'));
+      const server = servers[index];
+      
+      const newName = prompt('Enter new server name:', server.name);
+      const newAddress = prompt('Enter new server address:', server.address);
+      
+      if (newName && newAddress) {
+        servers[index] = { name: newName, address: newAddress };
+        localStorage.setItem('eagler_servers', JSON.stringify(servers));
+        refreshServerList();
+      }
+    }
+
+    function deleteServer(index) {
+      const servers = JSON.parse(localStorage.getItem('eagler_servers'));
+      servers.splice(index, 1);
+      localStorage.setItem('eagler_servers', JSON.stringify(servers));
+      refreshServerList();
+    }
+
+    // Profile functions
+    function savePlayerName() {
+      const nameInput = document.getElementById('player-name');
+      const name = nameInput.value.trim();
+      
+      if (!name) {
+        alert('Please enter a player name');
+        return;
+      }
+      
+      localStorage.setItem('eagler_player_name', name);
+      nameInput.value = '';
+      refreshProfile();
+      alert('Player name saved!');
+    }
+
+    function uploadSkin(input) {
+      const file = input.files[0];
+      if (file) {
+        // In a real implementation, we'd read and store the file
+        // For now, just store the filename
+        localStorage.setItem('eagler_skin', file.name);
+        refreshProfile();
+        alert('Skin uploaded! (Note: Preview not implemented in demo)');
+      }
+    }
+
+    function uploadCape(input) {
+      const file = input.files[0];
+      if (file) {
+        localStorage.setItem('eagler_cape', file.name);
+        refreshProfile();
+        alert('Cape uploaded! (Note: Preview not implemented in demo)');
+      }
+    }
+
+    function refreshProfile() {
+      const playerName = localStorage.getItem('eagler_player_name') || 'Steve';
+      const skin = localStorage.getItem('eagler_skin') || 'Default (steve.png)';
+      const cape = localStorage.getItem('eagler_cape') || 'None';
+      
+      document.getElementById('current-player-name').textContent = playerName;
+      document.getElementById('current-skin').textContent = skin;
+      document.getElementById('current-cape').textContent = cape;
+      
+      document.getElementById('player-name').value = '';
+    }
+
+    // Launch game
+    function launchGame(mode, target) {
+      // Store launch parameters
+      localStorage.setItem('eagler_launch_mode', mode);
+      localStorage.setItem('eagler_launch_target', target);
+      
+      // Redirect to main game
+      window.location.href = 'index.html';
+    }
+
+    // Initialize on load
+    initStorage();
+    refreshProfile();
+  </script>
+</body>
+</html>
