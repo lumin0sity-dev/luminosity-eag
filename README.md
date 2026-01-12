@@ -12,8 +12,6 @@ Features:
 - Instanced rendering for improved performance
 - Save / Load world JSON
 
-How to run locally
-1. Clone the repo
-2. Serve the `play` folder with a static server (e.g., `npx http-server play -p 8080`)
-
+site is live @ play.luminositymadethis.com
+currently indev so dont try just yet
 License: MIT
