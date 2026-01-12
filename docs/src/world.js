@@ -107,4 +107,44 @@ class VoxelWorld {
     this.blocks = data.blocks || {};
     this.buildInstancedMeshes();
   }
+
+  addBlock(x, y, z, typeId) {
+    this.setBlock(x, y, z, typeId);
+    this.buildInstancedMeshes();
+  }
+
+  removeBlock(x, y, z) {
+    this.setBlock(x, y, z, 0);
+    this.buildInstancedMeshes();
+  }
+
+  raycast(origin, direction, maxDistance) {
+    // Simple DDA raycast through voxel grid
+    const step = 0.1;
+    let t = 0;
+    
+    while (t < maxDistance) {
+      const x = Math.floor(origin.x + direction.x * t);
+      const y = Math.floor(origin.y + direction.y * t);
+      const z = Math.floor(origin.z + direction.z * t);
+      
+      const blockId = this.getBlock(x, y, z);
+      if (blockId !== 0) {
+        return {
+          hit: true,
+          block: { x, y, z },
+          point: new THREE.Vector3(
+            origin.x + direction.x * t,
+            origin.y + direction.y * t,
+            origin.z + direction.z * t
+          ),
+          distance: t
+        };
+      }
+      
+      t += step;
+    }
+    
+    return { hit: false };
+  }
 }
