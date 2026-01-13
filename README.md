@@ -11,7 +11,5 @@ Features:
 - Inventory UI and block selection
 - Instanced rendering for improved performance
 - Save / Load world JSON
-
-site is live @ play.luminositymadethis.com
 currently indev so dont try just yet
 License: MIT
