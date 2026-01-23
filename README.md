@@ -2,7 +2,7 @@
 
 This repository contains a lightweight web demo inspired by Minecraft 1.20. The playable demo is located in the `play/` folder and can be served via GitHub Pages at:
 
-https://lumin0sity-dev.github.io/luminosity-eag/play
+https://lumin0sity-dev.github.io/luminosity-eag/
 
 Features:
 - Procedural terrain generation (Simplex noise)
@@ -11,7 +11,5 @@ Features:
 - Inventory UI and block selection
 - Instanced rendering for improved performance
 - Save / Load world JSON
-
-site is live @ play.luminositymadethis.com
 currently indev so dont try just yet
 License: MIT
