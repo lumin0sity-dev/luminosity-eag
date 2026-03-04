@@ -2,6 +2,7 @@
   "name": "luminosity-eag",
   "version": "0.1.0",
   "description": "Web voxel demo inspired by Minecraft 1.20",
+  "homepage": "https://lumin0sity-dev.github.io/sharky_boi",
   "scripts": {
     "start": "npx http-server play -p 8080"
   },
